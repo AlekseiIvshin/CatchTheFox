@@ -20,6 +20,7 @@ const RouterWithRedux = connect()(Router);
 const store = createStore( rootReducer, applyMiddleware( thunkMiddleware ));
 
 export default class App extends Component {
+
   render() {
     return (
       <Provider store={store}>

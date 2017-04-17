@@ -6,7 +6,6 @@ import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { 
   StyleSheet,
-  FlatList, 
   View, 
   Text,
   ToolbarAndroid,
@@ -14,6 +13,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions as Router } from 'react-native-router-flux';
+import { DeviceEventEmitter } from 'react-native'
+import Beacons from 'react-native-beacons-manager'
+import _ from 'lodash';
+import { REGION } from '../constants/iBeaconsConstants';
 
 class Main extends Component {
 
@@ -24,26 +27,48 @@ class Main extends Component {
 	  isFoxSearching: false
 	}
   }
-
+  
+  componentDidMount() {
+    Beacons.detectIBeacons();
+	
+	Beacons.startRangingBeaconsInRegion(REGION)
+	  .then(()=> console.log('Beacons ranging started successfully!'))
+	  .catch((err) => console.log(`Beacon ranging not started, error ${err}`));
+	
+	DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
+      console.log('Found beacons!', data.beacons);
+	  this.setState({foxes: data.beacons});
+	});
+  }
+  
+  componentWillUnmount() {
+	DeviceEventEmitter.removeListener('beaconsDidRange');
+	
+	Beacons.stopRangingBeaconsInRegion(REGION)
+	  .then(()=> console.log('Beacons ranging stopped successfully!'))
+	  .catch((err) => console.log(`Beacon ranging not stopped, error ${err}`));
+  }
+  
   handleFoxSelected(foxData) {
     Router.details({foxData});
   }
   
   render() {
-    const { state, actions } = this.props;
-	const foxes = ['Fox 1', 'Fox 2', 'Fox 3'];
     return (
       <View style={styles.container}>
 	    <ToolbarAndroid 
 		  title='CatchTheFox'
 		  style={styles.toolbar}/>
-	    <FlatList
-		  renderItem={this.renderFox.bind(this)}
-		  data={foxes}
-		  ItemSeparatorComponent={this.renderSeparator}
-		/>
+	    {this.renderFoxes()}
       </View>
     );
+  }
+  
+  renderFoxes() {
+	const foxes = ['Fox 1', 'Fox 2', 'Fox 3'];
+	return _.map(foxes, (fox) => {
+	  return this.renderFox(fox);
+	});
   }
   
   renderFox(fox) {
