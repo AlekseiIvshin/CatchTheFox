@@ -8,10 +8,10 @@ import { Provider, connect } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import {Scene, Router, ActionConst } from 'react-native-router-flux';
 
-import BeaconsMiddleware from 'app/middlewares/BeaconsMiddleware';
+import BeaconsMiddleware from '../middlewares/BeaconsMiddleware';
 
 import Routes from '../reducers/Routes';
-import BeaconsReducer from 'app/reducers/BeaconsReducer';
+import BeaconsReducer from '../reducers/BeaconsReducer';
 
 import Main from './Main';
 import Details from './Details';

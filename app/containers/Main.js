@@ -2,7 +2,7 @@
  * Foxes list component.
  */
 
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import { bindActionCreators } from 'redux';
 import {
   StyleSheet,
@@ -16,8 +16,7 @@ import { Actions as Router } from 'react-native-router-flux';
 import { DeviceEventEmitter } from 'react-native'
 import Beacons from 'react-native-beacons-manager'
 import _ from 'lodash';
-import { REGION } from '../constants/iBeaconsConstants';
-import BeaconsActions from 'app/actions/BeaconsActions';
+import * as BeaconActions from '../actions/BeaconActions';
 
 class Main extends Component {
 
@@ -101,4 +100,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {...BeaconsActions})(Main);
+export default connect(mapStateToProps, {...BeaconActions})(Main);

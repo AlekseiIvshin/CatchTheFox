@@ -1,22 +1,20 @@
-import { createAction } from 'redux-actions';
+import * as BeaconActionTypes from './BeaconActionTypes';
 
-import ActionTypes from 'app/actions/BeaconActionTypes';
-
-const startRanging = createAction(ActionTypes.ACTION_START_RANGING);
-const stopRanging = createAction(ActionTypes.ACTION_STOP_RANGING);
-
-function beaconsChanged(beacons) {
+export function beaconsChanged(beacons) {
   return {
-    type: ActionTypes.ACTION_BEACON_DID_RANGE,
+    type: BeaconActionTypes.ACTION_BEACON_DID_RANGE,
     payload: beacons
   }
 }
 
-const actionCreators = {
-  startRanging,
-  stopRanging,
+export function startRanging() {
+  return {
+    type: BeaconActionTypes.ACTION_START_RANGING
+  }
+}
 
-  beaconsChanged
-};
-
-export default actionCreators;
+export function stopRanging() {
+  return {
+    type: BeaconActionTypes.ACTION_STOP_RANGING
+  }
+}
