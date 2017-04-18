@@ -1,1 +1,0 @@
-export const REGION = 'CATCH_THE_FOX_REGION';

@@ -1,12 +1,12 @@
 /**
  * Foxes list component.
  */
- 
+
 import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
-import { 
+import {
   StyleSheet,
-  View, 
+  View,
   Text,
   ToolbarAndroid,
   TouchableHighlight
@@ -17,76 +17,61 @@ import { DeviceEventEmitter } from 'react-native'
 import Beacons from 'react-native-beacons-manager'
 import _ from 'lodash';
 import { REGION } from '../constants/iBeaconsConstants';
+import BeaconsActions from 'app/actions/BeaconsActions';
 
 class Main extends Component {
 
-  constructor(props) {
-    super(props);
-	
-	this.state = {
-	  isFoxSearching: false
-	}
-  }
-  
+  static propTypes = {
+    startRanging: PropTypes.func.isRequired,
+    stopRanging: PropTypes.func.isRequired
+  };
+
   componentDidMount() {
-    Beacons.detectIBeacons();
-	
-	Beacons.startRangingBeaconsInRegion(REGION)
-	  .then(()=> console.log('Beacons ranging started successfully!'))
-	  .catch((err) => console.log(`Beacon ranging not started, error ${err}`));
-	
-	DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
-      console.log('Found beacons!', data.beacons);
-	  this.setState({foxes: data.beacons});
-	});
+    this.props.startRanging();
   }
-  
+
   componentWillUnmount() {
-	DeviceEventEmitter.removeListener('beaconsDidRange');
-	
-	Beacons.stopRangingBeaconsInRegion(REGION)
-	  .then(()=> console.log('Beacons ranging stopped successfully!'))
-	  .catch((err) => console.log(`Beacon ranging not stopped, error ${err}`));
+    this.props.stopRanging();
   }
-  
+
   handleFoxSelected(foxData) {
     Router.details({foxData});
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
-	    <ToolbarAndroid 
-		  title='CatchTheFox'
-		  style={styles.toolbar}/>
-	    {this.renderFoxes()}
+        <ToolbarAndroid
+          title='CatchTheFox'
+          style={styles.toolbar}/>
+        {this.renderFoxes()}
       </View>
     );
   }
-  
+
   renderFoxes() {
-	const foxes = ['Fox 1', 'Fox 2', 'Fox 3'];
-	return _.map(foxes, (fox) => {
-	  return this.renderFox(fox);
-	});
+    const foxes = ['Fox 1', 'Fox 2', 'Fox 3'];
+    return _.map(foxes, (fox) => {
+      return this.renderFox(fox);
+    });
   }
-  
+
   renderFox(fox) {
     return (
-	  <TouchableHighlight 
-	    key={fox}
-		underlayColor='#E0E0E0'
-		style={styles.foxItemContainer}
-		onPress={this.handleFoxSelected.bind(this, fox.item)}>
-	    <Text style={styles.foxName}>{fox.item}</Text>
-	  </TouchableHighlight>
-	);
+      <TouchableHighlight
+        key={fox}
+        underlayColor='#E0E0E0'
+        style={styles.foxItemContainer}
+        onPress={this.handleFoxSelected.bind(this, fox.item)}>
+        <Text style={styles.foxName}>{fox.item}</Text>
+      </TouchableHighlight>
+    );
   }
-  
+
   renderSeparator() {
     return (
-	  <View style={styles.rowSeparator}/>
-	);
+      <View style={styles.rowSeparator}/>
+    );
   }
 }
 
@@ -102,12 +87,18 @@ const styles = StyleSheet.create({
   },
   rowSeparator: {
     height: 0.5,
-	backgroundColor: '#BDBDBD'
+    backgroundColor: '#BDBDBD'
   },
   toolbar: {
     height: 48,
-	backgroundColor: '#E0E0E0'
+    backgroundColor: '#E0E0E0'
   }
 });
 
-export default connect()(Main);
+const mapStateToProps = (state) => {
+  return {
+    foxes: state.foxes
+  };
+};
+
+export default connect(mapStateToProps, {...BeaconsActions})(Main);
