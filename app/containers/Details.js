@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
@@ -48,7 +49,7 @@ class Details extends Component {
           title="CatchTheFox"
           isBackShown
           onBack={() => Actions.pop()}
-          />
+        />
         <Text style={styles.foxInfo}>uuid {uuid}</Text>
         <Text style={styles.foxInfo}>major {major}</Text>
         <Text style={styles.foxInfo}>minor {minor}</Text>
@@ -83,7 +84,8 @@ class Details extends Component {
           <TouchableHighlight
             underlayColor='#E0E0E0'
             onPress={this.handleFoxCatch.bind(this)}>
-            <Text style={styles.catchFox}>Поймать!</Text>
+            <Image
+              source={require('../images/ic_fox.png')}/>
           </TouchableHighlight>
         </View>
       );
@@ -110,17 +112,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0'
   },
   catchContainer: {
-    height: 48,
-    backgroundColor: '#FFC107',
     alignItems: 'center',
-    //alignContent: 'center',
     margin: 16
   },
   congratulationContainer: {
     height: 48,
     backgroundColor: '#4CAF50',
     alignItems: 'center',
-    //alignContent: 'center',
     margin: 16
   },
   foxInfo: {

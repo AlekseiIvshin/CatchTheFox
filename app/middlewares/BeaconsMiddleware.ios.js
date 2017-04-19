@@ -17,11 +17,19 @@ export default (store) => {
   return (next) => (action) => {
     switch (action.type) {
       case BeaconActionTypes.ACTION_START_RANGING:
+      {
+        DeviceEventEmitter.addListener(
+          'authorizationStatusDidChange',
+          (info) => console.log('authorizationStatusDidChange: ', info)
+        );
+
         Beacons.requestWhenInUseAuthorization();
 
-        Beacons.startRangingBeaconsInRegion(REGION, action.payload)
-          .then(()=> console.log('Beacons ranging started successfully!'))
-          .catch((err) => console.log(`Beacon ranging not started, error ${err}`));
+        let region = {identifier: REGION};
+        if (action.payload) {
+          region.uuid = action.payload;
+        }
+        Beacons.startRangingBeaconsInRegion(region);
 
         DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
           console.log('Found beacons!', data.beacons);
@@ -30,14 +38,18 @@ export default (store) => {
             debouncedCleanFunction(store.dispatch);
           }
         });
-
+      }
         break;
       case BeaconActionTypes.ACTION_STOP_RANGING:
+      {
         DeviceEventEmitter.removeListener('beaconsDidRange');
 
-        Beacons.stopRangingBeaconsInRegion(REGION, action.payload)
-          .then(()=> console.log('Beacons ranging stopped successfully!'))
-          .catch((err) => console.log(`Beacon ranging not stopped, error ${err}`));
+        let region = {identifier: REGION};
+        if (action.payload) {
+          region.uuid = action.payload;
+        }
+        Beacons.stopRangingBeaconsInRegion(region);
+      }
         break;
     }
     next(action);
