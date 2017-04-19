@@ -8,15 +8,15 @@ import {
   StyleSheet,
   View,
   Text,
-  ToolbarAndroid,
   TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions as Router } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import { DeviceEventEmitter } from 'react-native'
 import Beacons from 'react-native-beacons-manager'
 import _ from 'lodash';
 import * as BeaconActions from '../actions/BeaconActions';
+import Navigation from '../components/Navigation';
 
 class Main extends Component {
 
@@ -26,50 +26,48 @@ class Main extends Component {
   };
 
   componentDidMount() {
-    this.props.startRanging();
+    this.props.startRanging(null);
   }
 
   componentWillUnmount() {
-    this.props.stopRanging();
+    this.props.stopRanging(null);
   }
 
   handleFoxSelected(foxData) {
-    Router.details({foxData});
+    const {uuid, minor, major} = foxData;
+    Actions.details({uuid, minor, major});
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <ToolbarAndroid
-          title='CatchTheFox'
-          style={styles.toolbar}/>
+        <Navigation
+          title="CatchTheFox"/>
         {this.renderFoxes()}
       </View>
     );
   }
 
   renderFoxes() {
-    const foxes = ['Fox 1', 'Fox 2', 'Fox 3'];
-    return _.map(foxes, (fox) => {
-      return this.renderFox(fox);
+    return _.map(this.props.beacons.items, (beacon) => {
+      return this.renderFox(beacon);
     });
   }
 
   renderFox(fox) {
     return (
-      <TouchableHighlight
-        key={fox}
-        underlayColor='#E0E0E0'
-        style={styles.foxItemContainer}
-        onPress={this.handleFoxSelected.bind(this, fox.item)}>
-        <Text style={styles.foxName}>{fox.item}</Text>
-      </TouchableHighlight>
-    );
-  }
-
-  renderSeparator() {
-    return (
-      <View style={styles.rowSeparator}/>
+        <TouchableHighlight
+          key={`${fox.uuid}-${fox.major}-${fox.minor}`}
+          underlayColor='#E0E0E0'
+          style={styles.foxItemContainer}
+          onPress={this.handleFoxSelected.bind(this, fox)}>
+          <View>
+            <Text style={styles.foxName}>Лиса:</Text>
+            <Text style={styles.foxName}>uuid {fox.uuid}</Text>
+            <Text style={styles.foxName}>major {fox.major}</Text>
+            <Text style={styles.foxName}>minor {fox.minor}</Text>
+          </View>
+        </TouchableHighlight>
     );
   }
 }
@@ -79,14 +77,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   foxItemContainer: {
-    padding: 8
+    padding: 8,
+    borderBottomColor: '#BDBDBD',
+    borderBottomWidth: 1
   },
   foxName: {
     fontSize: 20
-  },
-  rowSeparator: {
-    height: 0.5,
-    backgroundColor: '#BDBDBD'
   },
   toolbar: {
     height: 48,
@@ -96,7 +92,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    foxes: state.foxes
+    beacons: state.beacons
   };
 };
 

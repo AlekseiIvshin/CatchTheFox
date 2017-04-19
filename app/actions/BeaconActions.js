@@ -7,14 +7,16 @@ export function beaconsChanged(beacons) {
   }
 }
 
-export function startRanging() {
+export function startRanging(uuid) {
   return {
-    type: BeaconActionTypes.ACTION_START_RANGING
+    type: BeaconActionTypes.ACTION_START_RANGING,
+    payload: uuid
   }
 }
 
-export function stopRanging() {
+export function stopRanging(uuid) {
   return {
-    type: BeaconActionTypes.ACTION_STOP_RANGING
+    type: BeaconActionTypes.ACTION_STOP_RANGING,
+    payload: uuid
   }
 }

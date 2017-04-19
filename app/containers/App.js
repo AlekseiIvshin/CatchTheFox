@@ -11,14 +11,14 @@ import {Scene, Router, ActionConst } from 'react-native-router-flux';
 import BeaconsMiddleware from '../middlewares/BeaconsMiddleware';
 
 import Routes from '../reducers/Routes';
-import BeaconsReducer from '../reducers/BeaconsReducer';
+import beacons from '../reducers/BeaconsReducer';
 
 import Main from './Main';
 import Details from './Details';
 
 const rootReducer = combineReducers({
   Routes,
-  BeaconsReducer
+  beacons
 });
 
 const RouterWithRedux = connect()(Router);
