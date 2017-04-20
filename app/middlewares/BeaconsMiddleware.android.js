@@ -8,7 +8,7 @@ import * as BeaconActionTypes from '../actions/BeaconActionTypes';
 const REGION = 'CATCH_THE_FOX_REGION';
 
 const debouncedCleanFunction = _.debounce((dispatch) => dispatch(beaconsChanged([])),
-  5000, {
+  10000, {
     'leading': false,
     'trailing': true
   });

@@ -84,12 +84,7 @@ class Main extends Component {
         underlayColor='#E0E0E0'
         style={styles.foxItemContainer}
         onPress={this.handleFoxSelected.bind(this, fox)}>
-        <View>
-          <Text style={styles.foxName}>Лиса:</Text>
-          <Text style={styles.foxInfo}>uuid {fox.uuid}</Text>
-          <Text style={styles.foxInfo}>major {fox.major}</Text>
-          <Text style={styles.foxInfo}>minor {fox.minor}</Text>
-        </View>
+        <Text style={styles.foxName}>Лиса {this.props.beacons.aliases[`${fox.uuid}|${fox.major}|${fox.minor}`]}</Text>
       </TouchableHighlight>
     );
   }
@@ -100,7 +95,7 @@ class Main extends Component {
         underlayColor='#E0E0E0'
         style={styles.releaseContainer}
         onPress={this.handleReleaseFoxes}>
-          <Text style={styles.releaseText}>Отпустить лис</Text>
+        <Text style={styles.releaseText}>Отпустить лис</Text>
       </TouchableHighlight>
     );
   }

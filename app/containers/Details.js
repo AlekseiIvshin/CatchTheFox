@@ -91,9 +91,7 @@ class Details extends Component {
           onBack={() => Actions.pop()}
         />
         <View style={styles.content}>
-          <Text style={styles.foxInfo}>uuid {uuid}</Text>
-          <Text style={styles.foxInfo}>major {major}</Text>
-          <Text style={styles.foxInfo}>minor {minor}</Text>
+          <Text style={styles.foxInfo}>Лиса {this.props.beacons.aliases[`${uuid}|${major}|${minor}`]}</Text>
           {this.renderCongratulation()}
           {this.renderDistance(fox)}
           {this.renderFoxCatch(fox)}
@@ -112,7 +110,7 @@ class Details extends Component {
       );
     } else {
       return (
-        <Text style={styles.foxInfo}>Расстояние: {fox.distance.toFixed(2)} м</Text>
+        <Text style={styles.foxInfo}>Расстояние: <Text style={styles.distance}>{fox.distance.toFixed(2)} м</Text></Text>
       );
     }
   }
@@ -176,6 +174,10 @@ const styles = StyleSheet.create({
   catchFox: {
     fontSize: 25,
     color: '#FFFFFF'
+  },
+  distance: {
+    fontWeight: 'bold',
+    fontSize: 24
   }
 });
 
