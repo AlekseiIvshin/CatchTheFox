@@ -37,7 +37,7 @@ export default class ActionField extends Component {
   renderLeft() {
     if (this.props.isBackShown && this.props.onBack) {
       return (
-        <TouchableWithoutFeedback onPress={this.props.onBack}>
+        <TouchableWithoutFeedback onPress={this.props.onBack} style={styles.left}>
           <Image
             style={styles.iconBack}
             source={require('../images/ic_arrow_left.png')}
@@ -50,6 +50,7 @@ export default class ActionField extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    height: 48,
     flexDirection: 'row',
     backgroundColor: '#FFC107',
     alignItems: 'center'
@@ -57,11 +58,12 @@ const styles = StyleSheet.create({
   left: {
     width: 48,
     height: 48,
-    padding: 6
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   iconBack: {
-    width: 36,
-    height: 36
+    width: 24,
+    height: 24
   },
   title: {
     fontSize: 20,

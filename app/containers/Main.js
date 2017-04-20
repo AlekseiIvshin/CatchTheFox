@@ -8,7 +8,8 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableHighlight
+  TouchableHighlight,
+  ActivityIndicator
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -43,9 +44,21 @@ class Main extends Component {
       <View style={styles.container}>
         <Navigation
           title="CatchTheFox"/>
+        {this.renderProgress()}
         {this.renderFoxes()}
       </View>
     );
+  }
+
+  renderProgress() {
+    if (this.props.beacons.isSearching && this.props.beacons) {
+      return (
+        <ActivityIndicator
+          animating={true}
+          style={styles.progress}
+        />
+      );
+    }
   }
 
   renderFoxes() {
@@ -63,9 +76,9 @@ class Main extends Component {
           onPress={this.handleFoxSelected.bind(this, fox)}>
           <View>
             <Text style={styles.foxName}>Лиса:</Text>
-            <Text style={styles.foxName}>uuid {fox.uuid}</Text>
-            <Text style={styles.foxName}>major {fox.major}</Text>
-            <Text style={styles.foxName}>minor {fox.minor}</Text>
+            <Text style={styles.foxInfo}>uuid {fox.uuid}</Text>
+            <Text style={styles.foxInfo}>major {fox.major}</Text>
+            <Text style={styles.foxInfo}>minor {fox.minor}</Text>
           </View>
         </TouchableHighlight>
     );
@@ -77,16 +90,25 @@ const styles = StyleSheet.create({
     flex: 1
   },
   foxItemContainer: {
-    padding: 8,
+    padding: 16,
     borderBottomColor: '#BDBDBD',
     borderBottomWidth: 1
   },
   foxName: {
     fontSize: 20
   },
+  foxInfo: {
+    fontSize: 18,
+    paddingLeft: 8
+  },
   toolbar: {
     height: 48,
     backgroundColor: '#E0E0E0'
+  },
+  progress: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16
   }
 });
 

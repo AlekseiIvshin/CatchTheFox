@@ -20,3 +20,10 @@ export function stopRanging(uuid) {
     payload: uuid
   }
 }
+
+export function searching(isSearching) {
+  return {
+    type: BeaconActionTypes.ACTION_BEACON_SEARCHING,
+    payload: isSearching
+  }
+}

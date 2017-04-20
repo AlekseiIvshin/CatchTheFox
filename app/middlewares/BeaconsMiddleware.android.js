@@ -2,13 +2,13 @@ import _ from 'lodash';
 import { DeviceEventEmitter } from 'react-native'
 import Beacons from 'react-native-beacons-manager'
 
-import { beaconsChanged } from '../actions/BeaconActions';
+import { beaconsChanged, searching } from '../actions/BeaconActions';
 import * as BeaconActionTypes from '../actions/BeaconActionTypes';
 
 const REGION = 'CATCH_THE_FOX_REGION';
 
 const debouncedCleanFunction = _.debounce((dispatch) => dispatch(beaconsChanged([])),
-  10000, {
+  5000, {
     'leading': false,
     'trailing': true
   });
@@ -29,6 +29,7 @@ export default (store) => {
             store.dispatch(beaconsChanged(data.beacons));
             debouncedCleanFunction(store.dispatch);
           }
+          store.dispatch(searching(!data.beacons || data.beacons.length == 0));
         });
 
         break;

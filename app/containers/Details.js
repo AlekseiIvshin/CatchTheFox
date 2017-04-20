@@ -50,13 +50,14 @@ class Details extends Component {
           isBackShown
           onBack={() => Actions.pop()}
         />
+        <View style={styles.content}>
         <Text style={styles.foxInfo}>uuid {uuid}</Text>
         <Text style={styles.foxInfo}>major {major}</Text>
         <Text style={styles.foxInfo}>minor {minor}</Text>
         {this.renderCongratulation()}
         {this.renderDistance(fox)}
         {this.renderFoxCatch(fox)}
-
+</View>
       </View>
     );
   }
@@ -107,6 +108,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  content: {
+    flex: 1,
+    padding: 16
+  },
   toolbar: {
     height: 48,
     backgroundColor: '#E0E0E0'
@@ -116,14 +121,14 @@ const styles = StyleSheet.create({
     margin: 16
   },
   congratulationContainer: {
-    height: 48,
     backgroundColor: '#4CAF50',
     alignItems: 'center',
+    padding: 16,
     margin: 16
   },
   foxInfo: {
     fontSize: 20,
-    padding: 16
+    paddingBottom: 16
   },
   catchFox: {
     fontSize: 25,
