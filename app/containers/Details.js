@@ -9,7 +9,9 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableHighlight } from 'react-native';
+  TouchableHighlight,
+  AsyncStorage
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -28,14 +30,52 @@ class Details extends Component {
     super(props);
 
     this.state = {
-      isFoxСaught: false
+      isFoxСaught: false,
+      isReady: false
     };
   }
 
+  componentDidMount() {
+    const { uuid, major, minor } = this.props;
+    AsyncStorage.getItem('caughtFoxes')
+      .then(req => JSON.parse(req))
+      .then(caughtFoxes => {
+        if (!caughtFoxes) {
+          return false;
+        }
+        let foxIndex = _.findIndex(caughtFoxes, (beacon) => {
+          return beacon.uuid === uuid && major === beacon.major && minor === beacon.minor;
+        });
+        return foxIndex >= 0;
+      })
+      .then(isFoxСaught => {
+        this.setState({
+          isReady: true,
+          isFoxСaught
+        })
+      })
+      .catch(error => console.log('error!'))
+  }
+
   handleFoxCatch() {
+    const { uuid, major, minor } = this.props;
     this.setState({
       isFoxСaught: true
     });
+
+    AsyncStorage.getItem('caughtFoxes')
+      .then(req => JSON.parse(req))
+      .then(caughtFoxes => {
+        if (!caughtFoxes) {
+          return [];
+        }
+        caughtFoxes.push({ uuid, major, minor });
+        return caughtFoxes;
+      })
+      .then(caughtFoxes => {
+        AsyncStorage.setItem('caughtFoxes', JSON.stringify(caughtFoxes))
+      })
+      .catch(error => console.log('error!'));
   }
 
   render() {
@@ -51,13 +91,13 @@ class Details extends Component {
           onBack={() => Actions.pop()}
         />
         <View style={styles.content}>
-        <Text style={styles.foxInfo}>uuid {uuid}</Text>
-        <Text style={styles.foxInfo}>major {major}</Text>
-        <Text style={styles.foxInfo}>minor {minor}</Text>
-        {this.renderCongratulation()}
-        {this.renderDistance(fox)}
-        {this.renderFoxCatch(fox)}
-</View>
+          <Text style={styles.foxInfo}>uuid {uuid}</Text>
+          <Text style={styles.foxInfo}>major {major}</Text>
+          <Text style={styles.foxInfo}>minor {minor}</Text>
+          {this.renderCongratulation()}
+          {this.renderDistance(fox)}
+          {this.renderFoxCatch(fox)}
+        </View>
       </View>
     );
   }
@@ -78,7 +118,7 @@ class Details extends Component {
   }
 
   renderFoxCatch(fox) {
-    if (!this.state.isFoxСaught && fox && fox.distance < 1) {
+    if (this.state.isReady && !this.state.isFoxСaught && fox && fox.distance < 1) {
       return (
         <View
           style={styles.catchContainer}>
@@ -94,7 +134,7 @@ class Details extends Component {
   }
 
   renderCongratulation() {
-    if (this.state.isFoxСaught) {
+    if (this.state.isReady && this.state.isFoxСaught) {
       return (
         <View style={styles.congratulationContainer}>
           <Text style={styles.congratulation}>Лиса поймана!</Text>
@@ -123,18 +163,17 @@ const styles = StyleSheet.create({
   congratulationContainer: {
     backgroundColor: '#4CAF50',
     alignItems: 'center',
-    padding: 16,
-    margin: 16
+    padding: 16
+  },
+  congratulation: {
+    fontSize: 25,
+    color: '#FFFFFF'
   },
   foxInfo: {
     fontSize: 20,
     paddingBottom: 16
   },
   catchFox: {
-    fontSize: 25,
-    color: '#FFFFFF'
-  },
-  congratulation: {
     fontSize: 25,
     color: '#FFFFFF'
   }

@@ -8,8 +8,10 @@ import {
   StyleSheet,
   View,
   Text,
+  ScrollView,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -39,13 +41,21 @@ class Main extends Component {
     Actions.details({uuid, minor, major});
   }
 
+  handleReleaseFoxes() {
+    AsyncStorage.setItem('caughtFoxes', JSON.stringify([]))
+      .catch(error => console.log('error!'));
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Navigation
           title="CatchTheFox"/>
         {this.renderProgress()}
-        {this.renderFoxes()}
+        <ScrollView styles={styles.foxesContainer}>
+          {this.renderFoxes()}
+        </ScrollView>
+        {this.renderReleaseFoxes()}
       </View>
     );
   }
@@ -69,24 +79,38 @@ class Main extends Component {
 
   renderFox(fox) {
     return (
-        <TouchableHighlight
-          key={`${fox.uuid}-${fox.major}-${fox.minor}`}
-          underlayColor='#E0E0E0'
-          style={styles.foxItemContainer}
-          onPress={this.handleFoxSelected.bind(this, fox)}>
-          <View>
-            <Text style={styles.foxName}>Лиса:</Text>
-            <Text style={styles.foxInfo}>uuid {fox.uuid}</Text>
-            <Text style={styles.foxInfo}>major {fox.major}</Text>
-            <Text style={styles.foxInfo}>minor {fox.minor}</Text>
-          </View>
-        </TouchableHighlight>
+      <TouchableHighlight
+        key={`${fox.uuid}-${fox.major}-${fox.minor}`}
+        underlayColor='#E0E0E0'
+        style={styles.foxItemContainer}
+        onPress={this.handleFoxSelected.bind(this, fox)}>
+        <View>
+          <Text style={styles.foxName}>Лиса:</Text>
+          <Text style={styles.foxInfo}>uuid {fox.uuid}</Text>
+          <Text style={styles.foxInfo}>major {fox.major}</Text>
+          <Text style={styles.foxInfo}>minor {fox.minor}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
+  renderReleaseFoxes() {
+    return (
+      <TouchableHighlight
+        underlayColor='#E0E0E0'
+        style={styles.releaseContainer}
+        onPress={this.handleReleaseFoxes}>
+          <Text style={styles.releaseText}>Отпустить лис</Text>
+      </TouchableHighlight>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  foxesContainer: {
     flex: 1
   },
   foxItemContainer: {
@@ -109,6 +133,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16
+  },
+  releaseContainer: {
+    backgroundColor: '#4CAF50',
+    alignItems: 'center',
+    padding: 16
+  },
+  releaseText: {
+    fontSize: 25,
+    color: '#FFFFFF'
   }
 });
 
