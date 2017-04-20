@@ -36,31 +36,34 @@ class Details extends Component {
   }
 
   componentDidMount() {
+    this.startTime = new Date().getTime() / 1000;
     const { uuid, major, minor } = this.props;
     AsyncStorage.getItem('caughtFoxes')
       .then(req => JSON.parse(req))
       .then(caughtFoxes => {
         if (!caughtFoxes) {
-          return false;
+          return null;
         }
-        let foxIndex = _.findIndex(caughtFoxes, (beacon) => {
+        return _.find(caughtFoxes, (beacon) => {
           return beacon.uuid === uuid && major === beacon.major && minor === beacon.minor;
         });
-        return foxIndex >= 0;
       })
-      .then(isFoxСaught => {
+      .then(fox => {
         this.setState({
           isReady: true,
-          isFoxСaught
+          isFoxСaught: fox,
+          spentTime: fox ? fox.spentTime : 0
         })
       })
       .catch(error => console.log('error!'))
   }
 
   handleFoxCatch() {
+    const spentTime = (new Date().getTime() / 1000 - this.startTime).toFixed(0);
     const { uuid, major, minor } = this.props;
     this.setState({
-      isFoxСaught: true
+      isFoxСaught: true,
+      spentTime
     });
 
     AsyncStorage.getItem('caughtFoxes')
@@ -69,7 +72,7 @@ class Details extends Component {
         if (!caughtFoxes) {
           return [];
         }
-        caughtFoxes.push({ uuid, major, minor });
+        caughtFoxes.push({uuid, major, minor, spentTime});
         return caughtFoxes;
       })
       .then(caughtFoxes => {
@@ -135,7 +138,8 @@ class Details extends Component {
     if (this.state.isReady && this.state.isFoxСaught) {
       return (
         <View style={styles.congratulationContainer}>
-          <Text style={styles.congratulation}>Лиса поймана!</Text>
+          <Text style={styles.congratulation}>Лиса поймана за</Text>
+          <Text style={styles.congratulationTime}>{this.state.spentTime} сек!</Text>
         </View>
       );
     }
@@ -156,7 +160,8 @@ const styles = StyleSheet.create({
   },
   catchContainer: {
     alignItems: 'center',
-    margin: 16
+    margin: 16,
+    paddingTop: 32
   },
   congratulationContainer: {
     backgroundColor: '#4CAF50',
@@ -164,6 +169,11 @@ const styles = StyleSheet.create({
     padding: 16
   },
   congratulation: {
+    fontSize: 25,
+    color: '#FFFFFF'
+  },
+  congratulationTime: {
+    fontWeight: 'bold',
     fontSize: 25,
     color: '#FFFFFF'
   },
