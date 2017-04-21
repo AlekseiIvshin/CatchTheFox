@@ -25,7 +25,7 @@ export default (store) => {
 
         Beacons.requestWhenInUseAuthorization();
 
-        let region = {identifier: REGION};
+        let region = {identifier: REGION, uuid: 'f7826da6-4fa2-4e98-8024-bc5b71e0893e'};
         if (action.payload) {
           region.uuid = action.payload;
         }
@@ -45,7 +45,7 @@ export default (store) => {
       {
         DeviceEventEmitter.removeListener('beaconsDidRange');
 
-        let region = {identifier: REGION};
+        let region = {identifier: REGION, uuid: 'f7826da6-4fa2-4e98-8024-bc5b71e0893e'};
         if (action.payload) {
           region.uuid = action.payload;
         }
