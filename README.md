@@ -10,3 +10,5 @@ Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from 
 Required: beacons or devices able to simulate beacons.
 
 Turn on beacons. Application will find them and they become foxes. **Hunt was started!**
+
+During the game application shows distance to foxes. When distance will enough to catch a fox, application will show image(or button) with fox. Tap on that image and fox will be caught!
