@@ -12,3 +12,24 @@ Required: beacons or devices able to simulate beacons.
 Turn on beacons. Application will find them and they become foxes. **Hunt was started!**
 
 During the game application shows distance to foxes. When distance will enough to catch a fox, application will show image(or button) with fox. Tap on that image and fox will be caught!
+
+
+Foxes list:
+
+![Foxes list](/screenshots/foxes_list.png)
+
+Track the fox:
+
+![Track fox](/screenshots/track_fox.png)
+
+Catch the fox:
+
+![Foxes list](/screenshots/catch_fox.png)
+
+Сongratulation:
+
+![Сongratulation](/screenshots/fox_was_caught.png)
+
+Don't worry and try again:
+
+![Lose fox](/screenshots/lost_fox.png)
